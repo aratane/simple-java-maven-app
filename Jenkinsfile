@@ -41,17 +41,20 @@ pipeline {
         stage('Manual Approval') {
             steps {
                 script {
-                    // Menampilkan input untuk user
+                    // Menampilkan input
                     def userInput = input(
                         id: 'userInput',
                         message: 'Lanjutkan ke tahap Deploy?',
                         parameters: [
-                            choice(choices: ['Proceed', 'Abort'], description: 'Pilih tindakan:', name: 'ACTION')
+                            [$class: 'ChoiceParameterDefinition', 
+                             choices: 'Proceed\nAbort', 
+                             description: 'Pilih tindakan:', 
+                             name: 'ACTION']
                         ]
                     )
 
-                    // Cek pilihan user
-                    if (userInput.ACTION == 'Proceed') {
+                    // Cek pilihan
+                    if (userInput == 'Proceed') {
                         echo 'Pengguna memilih untuk melanjutkan ke tahap Deploy.'
                     } else {
                         error 'Pengguna memilih untuk membatalkan eksekusi pipeline.'
