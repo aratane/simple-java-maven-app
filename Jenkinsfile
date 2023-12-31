@@ -15,12 +15,12 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    // Menggunakan image Maven untuk build
                     def mavenHome = tool 'Maven 3.9.6'
                     env.PATH = "${mavenHome}/bin:${env.PATH}"
                     
-                    // Build proyek Maven
-                    sh 'mvn -B -DskipTests clean package'
+                    cache(lookup: 'maven', paths: ['$HOME/.m2/repository']) {
+                        sh 'mvn -B -DskipTests clean package'
+                    }
                 }
             }
         }
@@ -33,16 +33,15 @@ pipeline {
             }
             post {
                 always {
-                    // Publikasikan laporan tes pake JUnit
                     junit 'target/surefire-reports/*.xml'
                 }
             }
         }
 
-        stage('Deliver') {
+        stage('Deploy') {
             steps {
                 script {
-                    sh './jenkins/scripts/deliver.sh'
+                    sh './jenkins/scripts/deploy.sh'
                 }
             }
         }
