@@ -41,10 +41,8 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                script {
-                    sh 'jenkins/scripts/deploy.sh'
-                    sleep(time: 1, unit: 'MINUTES')
-                }
+                sh './jenkins/scripts/deliver.sh'
+                sleep(time: 1, unit: 'MINUTES')
             }
         }
     }
