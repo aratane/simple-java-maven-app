@@ -47,7 +47,7 @@ pipeline {
             steps {
                 script {
                     // Analisis kode dan laporan kualitas
-                    Contoh: sh 'mvn sonar:sonar'
+                    sh 'mvn sonar:sonar'
                 }
             }
         }
