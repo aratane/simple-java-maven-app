@@ -15,7 +15,6 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    // Menggunakan image Maven untuk build
                     def mavenHome = tool 'Maven 3.9.6'
                     env.PATH = "${mavenHome}/bin:${env.PATH}"
                     
@@ -39,9 +38,34 @@ pipeline {
             }
         }
 
+        stage('Manual Approval') {
+            steps {
+                script {
+                    // Menampilkan input untuk user
+                    def userInput = input(
+                        id: 'userInput',
+                        message: 'Lanjutkan ke tahap Deploy?',
+                        parameters: [
+                            choice(choices: ['Proceed', 'Abort'], description: 'Pilih tindakan:', name: 'ACTION')
+                        ]
+                    )
+
+                    // Cek pilihan user
+                    if (userInput.ACTION == 'Proceed') {
+                        echo 'Pengguna memilih untuk melanjutkan ke tahap Deploy.'
+                    } else {
+                        error 'Pengguna memilih untuk membatalkan eksekusi pipeline.'
+                    }
+                }
+            }
+        }
+
         stage('Deploy') {
             steps {
-                sh './jenkins/scripts/deliver.sh'
+                script {
+                    sh './jenkins/scripts/deliver.sh'
+                }
+                // sleep setelah deployment
                 sleep(time: 1, unit: 'MINUTES')
             }
         }
