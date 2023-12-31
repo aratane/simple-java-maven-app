@@ -34,8 +34,8 @@ pipeline {
             steps {
                 script {
                     // Menggunakan image Maven untuk build
-                    def mvnHome = tool 'Maven 3.9.6'
-                    env.PATH = "${mvnHome}/bin:${env.PATH}"
+                    def mavenHome = tool 'Maven 3.9.6'
+                    env.PATH = "${mavenHome}/bin:${env.PATH}"
                     
                     // Build proyek Maven
                     sh 'mvn -B -DskipTests clean package'
@@ -66,10 +66,23 @@ pipeline {
             }
         }
 
+        stage('Integration Test') {
+            steps {
+                script {
+                    // Pastikan aplikasi telah di-deploy sebelum menjalankan uji integrasi
+                    // (Asumsi bahwa 'Deploy' telah berhasil dieksekusi sebelumnya)
+                    echo '=== Running Integration Tests ==='
+                    sh 'mvn verify -Pintegration-tests'
+                }
+            }
+        }
+
         stage('Deliver') {
             steps {
                 script {
                     echo '=== Delivering the Application ==='
+                    // Tambahkan langkah-langkah deliver sesuai kebutuhan Anda
+                    // Misalnya, membuat artefak yang akan didistribusikan
                     sh './jenkins/scripts/deliver.sh'
                 }
             }
@@ -79,18 +92,9 @@ pipeline {
             steps {
                 script {
                     echo '=== Deploying the Application ==='
+                    // Tambahkan langkah-langkah deploy sesuai kebutuhan Anda
+                    // Misalnya, mengunggah aplikasi ke server atau platform tujuan
                     sh './jenkins/scripts/deploy.sh'
-                }
-            }
-        }
-
-        stage('Integration Test') {
-            steps {
-                script {
-                    // Pastikan aplikasi telah di-deploy sebelum menjalankan uji integrasi
-                    // (Asumsi bahwa 'Deploy' telah berhasil dieksekusi sebelumnya)
-                    echo '=== Running Integration Tests ==='
-                    sh 'mvn verify -Pintegration-tests'
                 }
             }
         }
