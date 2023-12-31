@@ -42,7 +42,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
-                    sh './jenkins/scripts/deploy.sh'
+                    sh 'jenkins/scripts/deploy.sh'
                     sleep(time: 1, unit: 'MINUTES')
                 }
             }
