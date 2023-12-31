@@ -5,11 +5,6 @@ pipeline {
         skipStagesAfterUnstable()
     }
 
-    environment {
-        // Simpan nilai PATH
-        originalPath = sh(script: 'echo $PATH', returnStdout: true).trim()
-    }
-
     stages {
         stage('Checkout') {
             steps {
@@ -20,14 +15,12 @@ pipeline {
         stage('Build') {
             steps {
                 script {
+                    // Menggunakan image Maven untuk build
                     def mavenHome = tool 'Maven 3.9.6'
                     env.PATH = "${mavenHome}/bin:${env.PATH}"
                     
-                    // Cache dependensi Maven
-                    cache(type: 'Maven', path: "${HOME}/.m2/repository") {
-                        // Build proyek Maven
-                        sh 'mvn -B -DskipTests clean package'
-                    }
+                    // Build proyek Maven
+                    sh 'mvn -B -DskipTests clean package'
                 }
             }
         }
@@ -35,8 +28,6 @@ pipeline {
         stage('Test') {
             steps {
                 script {
-                    // Setel ulang PATH
-                    env.PATH = "${originalPath}"
                     sh 'mvn test'
                 }
             }
@@ -51,8 +42,6 @@ pipeline {
         stage('Deliver') {
             steps {
                 script {
-                    // Setel ulang PATH
-                    env.PATH = "${originalPath}"
                     sh './jenkins/scripts/deliver.sh'
                 }
             }
