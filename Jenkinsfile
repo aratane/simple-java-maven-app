@@ -1,6 +1,11 @@
 pipeline {
     agent any
 
+    environment {
+        M2_HOME = tool 'Maven 3.9.6'
+        PATH = "${M2_HOME}/bin:${PATH}"
+    }
+
     options {
         skipStagesAfterUnstable()
     }
@@ -15,12 +20,8 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    // Menggunakan image Maven untuk build
-                    def mavenHome = tool 'Maven 3.9.6'
-                    env.PATH = "${mavenHome}/bin:${env.PATH}"
-                    
-                    // Build proyek Maven
-                    sh 'mvn -B -DskipTests clean package'
+                    // Menggunakan Maven Wrapper untuk build
+                    sh './mvnw clean package'
                 }
             }
         }
@@ -28,7 +29,7 @@ pipeline {
         stage('Test') {
             steps {
                 script {
-                    sh 'mvn test'
+                    sh './mvnw test'
                 }
             }
             post {
@@ -50,13 +51,22 @@ pipeline {
 
     post {
         success {
-            echo 'Pipeline ran successfully!'
+            script {
+                echo 'Pipeline ran successfully!'
+            }
         }
         unstable {
-            echo 'Pipeline ran with unstable stage(s).'
+            script {
+                echo 'Pipeline ran with unstable stage(s).'
+            }
         }
         failure {
-            echo 'Pipeline failed!'
+            script {
+                echo 'Pipeline failed!'
+            }
+        }
+        cleanup {
+            deleteDir()
         }
     }
 }
