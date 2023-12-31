@@ -34,8 +34,8 @@ pipeline {
             steps {
                 script {
                     // Menggunakan image Maven untuk build
-                    def mavenHome = tool 'Maven 3.9.6'
-                    env.PATH = "${mavenHome}/bin:${env.PATH}"
+                    def mvnHome = tool 'Maven 3.9.6'
+                    env.PATH = "${mvnHome}/bin:${env.PATH}"
                     
                     // Build proyek Maven
                     sh 'mvn -B -DskipTests clean package'
