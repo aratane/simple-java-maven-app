@@ -66,10 +66,31 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
-                    sh './jenkins/scripts/deliver.sh'
+                    def APP_NAME = "my-app"
+                    def JAR_FILE = "target/${APP_NAME}-1.0-SNAPSHOT.jar"
+                    def DESTINATION_DIR = "/root/simple-java-maven-app"
+                    def LOG_FILE = "${DESTINATION_DIR}/${APP_NAME}.log"
+
+                    // Pindahkan ke direktori proyek
+                    dir("${WORKSPACE}") {
+                        // Cek apakah file JAR ada
+                        if (!fileExists(JAR_FILE)) {
+                            error "File JAR tidak ditemukan: ${JAR_FILE}"
+                        }
+                        // Backup file JAR jika sudah ada
+                        if (fileExists("${DESTINATION_DIR}/${APP_NAME}.jar")) {
+                            sh "mv ${DESTINATION_DIR}/${APP_NAME}.jar ${DESTINATION_DIR}/${APP_NAME}-backup-\$(date +'%Y%m%d%H%M%S').jar"
+                        }
+                        // Salin file JAR ke direktori tujuan
+                        sh "cp ${JAR_FILE} ${DESTINATION_DIR}/${APP_NAME}.jar || exit 1"
+                        // Catat waktu deploy
+                        sh "echo 'Deploy sukses pada: \$(date)' >> ${LOG_FILE}"
+                        echo "Deploy sukses! Aplikasi berjalan di ${DESTINATION_DIR}/${APP_NAME}.jar"
+                    }
                 }
-                // sleep setelah deployment
+                // Sleep setelah deployment
                 sleep(time: 1, unit: 'MINUTES')
+                }
             }
         }
     }
