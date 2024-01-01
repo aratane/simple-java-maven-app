@@ -68,7 +68,7 @@ pipeline {
                 script {
                     def APP_NAME = "my-app"
                     def JAR_FILE = "target/${APP_NAME}-1.0-SNAPSHOT.jar"
-                    def DESTINATION_DIR = "/root/simple-java-maven-app"
+                    def DESTINATION_DIR = "/home/sanjidev/simple-java-maven-app"
                     def LOG_FILE = "${DESTINATION_DIR}/${APP_NAME}.log"
 
                     // Pindahkan ke direktori proyek
