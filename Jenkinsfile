@@ -90,6 +90,7 @@ pipeline {
                 }
                 // Sleep setelah deployment
                 sleep(time: 1, unit: 'MINUTES')
+            }
         }
     }
 
