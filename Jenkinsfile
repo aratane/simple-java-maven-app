@@ -80,7 +80,7 @@ pipeline {
                     }
 
                     sh "cp ${JAR_FILE} ${DESTINATION_DIR}/${APP_NAME}.jar || exit 1"
-                    sh "echo 'Deploy sukses pada: \$(date)' >> ${LOG_FILE}"
+                    sh "echo 'Deploy sukses pada: \$(date)' >> /var/jenkins_home/workspace/submission-cicd-pipeline-sanjidev/my-app.log"
                     echo "Deploy sukses! Aplikasi berjalan di ${DESTINATION_DIR}/${APP_NAME}.jar"
                 }
                 sleep(time: 1, unit: 'MINUTES')
