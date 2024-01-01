@@ -67,8 +67,8 @@ pipeline {
             steps {
                 script {
                     def APP_NAME = "my-app"
-                    def JAR_FILE = "/home/sanjidev/simple-java-maven-app/target/${APP_NAME}-1.0-SNAPSHOT.jar"
-                    def DESTINATION_DIR = "/home/sanjidev/simple-java-maven-app"
+                    def JAR_FILE = "/var/jenkins_home/workspace/submission-cicd-pipeline-sanjidev/target/${APP_NAME}-1.0-SNAPSHOT.jar"
+                    def DESTINATION_DIR = "/var/jenkins_home/workspace/submission-cicd-pipeline-sanjidev"
                     def LOG_FILE = "${DESTINATION_DIR}/${APP_NAME}.log"
 
                     if (!fileExists(JAR_FILE)) {
